@@ -18,14 +18,11 @@ const memo = <T extends AnyFunc>(
   keyResolver = defaultKeyResolver<Parameters<T>>
 ) => {
   const cache = new Map<unknown, ReturnType<T>>()
-  return function (
-    this: unknown,
-    ...args: Parameters<T>
-  ): ReturnType<T> {
+  return (...args: Parameters<T>): ReturnType<T> => {
     const key = keyResolver(...args)
     const cached = cache.get(key)
     if (cached) return cached
-    const result = func.apply(this, args)
+    const result = func(args)
     cache.set(key, result)
     return result
   }
